@@ -14,26 +14,32 @@
 # limitations under the License.
 
 import rclpy
-from rclpy.node import Node
+
 from std_msgs.msg import String
 
+g_node = None  # declare a global node here to use it in the callback function
 
-class Subscriber(Node):  # inherit from Node
 
-    def __init__(self):
-        super().__init__('subscriber_lambda')  # initialize Node with the name "subscriber_lambda"
-        self.subscriber = self.create_subscription(
-            String,
-            'topic_lambda',
-            lambda msg: self.get_logger().info('Received: "%s"' % msg.data),
-            10)
+def listener_callback(msg):
+    global g_node
+    g_node.get_logger().info('I heard: "%s"' % msg.data)
 
 
 def main(args=None):
-    rclpy.init(args=args)
-    subscriber = Subscriber()
-    rclpy.spin(subscriber)
-    subscriber.destroy_node()  # destory node explicitly
+    global g_node
+    rclpy.init(args=args)  # initialize rclpy
+    g_node = rclpy.create_node('subscriber_old_school')  # intialize node
+    subscriber = g_node.create_subscription(
+      String, 'topic_old_school', listener_callback, 10)  # initialize subscriber
+    subscriber  # to prevent unused variable warning
+
+    while rclpy.ok():
+        rclpy.spin_once(g_node)
+
+    # Destroy the node explicitly
+    # (optional - otherwise it will be done automatically
+    # when the garbage collector destroys the node object)
+    g_node.destroy_node()
     rclpy.shutdown()
 
 

@@ -22,6 +22,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'publisher_old_school = topic_tutorial_py.publisher_old_school:main',
+            'subscriber_old_school = topic_tutorial_py.subscriber_old_school:main',
             'publisher_member_function = topic_tutorial_py.publisher_member_function:main',
             'subscriber_member_function = topic_tutorial_py.subscriber_member_function:main',
             'publisher_lambda = topic_tutorial_py.publisher_lambda:main',
